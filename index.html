@@ -1,21 +1,453 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Civic Issue Reporter Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civic Issue Reporter - Single Page Replication</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
     <style>
+
+        #zsiq_float {
+            bottom: 60px !important;   /* move up from bottom */
+            right: 50px !important;    /* move left from right side */
+        }
+        
+        /* CSS Reset and Global Styles */
+        :root {
+            --primary-color: #3b82f6; /* Blue for the button */
+            --text-dark: #1f2937;
+            --text-light: #4b5563;
+            --background-light: #f9fafb;
+            --card-border: #e5e7eb;
+            --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #071213 ; /* Base background color */
+        }
+
+        /* --- Header/Navigation Bar --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 3rem;
+            border-bottom: 1px solid var(--card-border);
+            /* Optional: Add a subtle shadow if it's meant to be fixed/sticky */
+            /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); */
+            background-color: #0c544a;
+        }
+
+        .logo a {
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;       /* Space between icon and text */
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 38px;       /* adjust as needed */
+            height: 38px;
+        }
+
+        .logo-text {
+            width: 5rem;       /* same as you used before */
+            height: auto;
+        }
+
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        /* Animation: Highlight current/active link */
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        /* --- Buttons --- */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem; /* Equivalent to 6px */
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            white-space: nowrap; /* Prevents text wrap on smaller screens */
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        /* --- Hero Section --- */
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 3rem;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .hero-text {
+            flex: 1;
+            max-width: 50%;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero-title-img {
+            width: 100%;
+            max-width: 560px; /* desktop size */
+            height: auto;
+        }
+
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-image-mockup {
+            flex: 1;
+            max-width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem; /* Matches the visual padding/margin in the image */
+        }
+        
+       
+        
+        .image-placeholder {
+            background-image: none !important; /* Remove the laptop drawing */
+            padding: 0 !important;            /* Remove inside spacing */
+            overflow: hidden;                 /* Prevent overflow */
+        }
+
+        .image-placeholder img {
+            /* width: 70%;
+            height: 70%;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            display: block; */
+            width: 100%;
+            max-width: 600px;   /* desktop size control */
+            height: auto;
+            border-radius: 0.75rem;
+            display: block;
+            margin: 0 auto;
+
+        }
+
+
+
+        /* --- Feature Cards Section --- */
+        .features-section {
+            padding: 4rem 3rem 6rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns for large screens */
+            gap: 2rem;
+            margin-top: 3rem; /* Space between hero and cards on image 4 */
+        }
+
+        .feature-card {
+            background-color: #0c544a ;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--card-border);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Animation: subtle hover effect like in the image */
+        .feature-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 0.375rem;
+            background-color: var(--background-light); /* Light background for the icon container */
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--card-border);
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: white;
+        }
+
+        /* --- Responsiveness (Matching the look across devices) --- */
+        @media (max-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns for medium screens */
+            }
+            .hero-container {
+                padding: 3rem 2rem;
+            }
+            .features-section {
+                padding: 3rem 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 1.5rem;
+            }
+            .nav-links {
+                display: none; /* Hide for mobile: a full mobile menu would be needed */
+            }
+            .hero-container {
+                flex-direction: column; /* Stack items vertically */
+                text-align: center;
+                gap: 2rem;
+            }
+            .hero-text {
+                max-width: 100%;
+            }
+            .hero-image-mockup {
+                max-width: 90%;
+            }
+            .hero-title {
+                /* font-size: 2rem; */
+                margin-bottom: 1rem;
+
+            }
+
+            .hero-title-img {
+                width: 100%;
+                max-width: 320px;   /* perfect for mobile */
+                height: auto;
+                margin: 0 auto;
+                display: block;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr; /* Single column for small screens */
+            }
+
+            .image-placeholder img {
+                max-width: 260px;
+                width: 100%;
+            }
+
+            .logo-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .logo-text {
+                width: 4rem;
+            }
+
+        }
+        
+        /* Keyframe for Navigation Link Animation */
+        @keyframes slideIn {
+            from {
+                transform: scaleX(0);
+            }
+            to {
+                transform: scaleX(1);
+            }
         }
     </style>
 </head>
 <body>
 
-<h1> 👋 Civic Issue Reporter — Test Page </h1>
-<p>If the chat widget loads in the bottom-right corner, everything is working.</p>
+    <header class="header" style="background-color:0c544a;">
+        <div class="logo">
+            <a href="#" class="logo-container">
+                <img src="CivIQ-logo.png" alt="CivIQ Icon" class="logo-icon">
+                
+                <img src="civiq_logo.png" style="width: 5rem;;" alt="Civic Issue Reporter Logo" class="logo-text">
+            </a>
+        </div>
+        <nav>
+            <!-- <div class="nav-links">
+                <a href="#">Admin</a>
+            </div> -->
+        </nav>
+    </header>
 
+    <section class="hero-container">
+        <div class="hero-text">
+            <h1 class="hero-title">
+                <a href="#">
+                    <img class="hero-title-img" src="2.png" alt="Civic Issue Reporter Logo">
+                    <!-- <img src="2.png" style="width: 35rem;;" alt="Civic Issue Reporter Logo"> -->
+                </a>
+                <!-- Civic Issue Reporter -->
+            </h1>
+            <h2 class="hero-subtitle">
+                Smart Reporting for Your City
+            </h2>
+            <p class="hero-description">
+                Empowering residents to submit city infrastructure problems through an intuitive, government-grade interface with real-time tracking and transparent resolution.
+            </p>
+            <!-- <a href="#" class="btn btn-primary">Report an Issue</a> -->
+            <a id="openChatBtn" class="btn btn-primary" href="#">Report an Issue</a>
+
+        </div>
+        
+        <div class="hero-image-mockup">
+            <div class="image-placeholder">
+                <a href="#">
+                    <img src="identify_issues_illustration.jpg" alt="identify_issues_illustration">
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="cards-grid">
+            
+            <div class="feature-card">
+                <div class="card-icon">
+                    <span class="material-icons-round">
+                        assignment
+                    </span>
+                </div>
+                <h3 class="card-title">Identify Issues</h3>
+                <p class="card-description">
+                    Citizens report infrastructure problems like potholes, water leaks, or power outages through an intuitive interface.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon">
+                    <span class="material-icons-round">
+                        category
+                    </span>
+                </div>
+                <h3 class="card-title">Auto-Categorization</h3>
+                <p class="card-description">
+                    AI-powered system automatically categorizes and prioritizes issues for efficient processing.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon">
+                    <span class="material-icons-round">
+                        lock
+                    </span>
+                </div>
+                <h3 class="card-title">Secure Submission to Database</h3>
+                <p class="card-description">
+                    Reports are securely stored in our database with encrypted transmission and data protection.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon">
+                    <span class="material-icons-round">
+                        track_changes
+                    </span>
+                </div>
+                <h3 class="card-title">Tracking & Review</h3>
+                <p class="card-description">
+                    Track your issue with a unique ID and receive real-time updates on resolution progress.
+                </p>
+            </div>
+            
+        </div>
+    </section>
 <script>window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}</script><script id="zsiqscript" src="https://salesiq.zohopublic.in/widget?wc=siq1313ddd01294406bde4792a0e1b374c7a011161b06aa2b3af4cbfdde2dfc1a6b" defer></script>
+<script>
+    document.getElementById("openChatBtn").addEventListener("click", function(e) {
+        e.preventDefault(); // Prevent link jump
+        if ($zoho && $zoho.salesiq) {
+            $zoho.salesiq.floatwindow.visible(true); // Opens chatbot
+        }
+    });
+</script>
 
 </body>
 </html>
